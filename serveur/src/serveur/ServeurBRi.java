@@ -5,11 +5,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 
-import service.Service;
-
 public class ServeurBRi implements Runnable {
 	private ServerSocket listen_socket;
-	private Class<? extends service.Service> classeService;
 	private Constructor<?> constructeurService;
 
 	// Ajouter un .class en paramètre
@@ -19,7 +16,6 @@ public class ServeurBRi implements Runnable {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		this.classeService = classeService;
 		this.constructeurService = classeService.getDeclaredConstructor(java.net.Socket.class);
 	}
 
@@ -29,12 +25,9 @@ public class ServeurBRi implements Runnable {
 	public void run() {
 		try {
 			while(true) {
-			
-				
 				//lancer le service avec la socket en param
 				Socket socketClient = listen_socket.accept();
-				classeService = this.constructeurService.newInstance(socketClient);
-				classeService.start();
+				new Thread((Runnable) this.constructeurService.newInstance(socketClient)).start();
 			}
 		}
 		catch (IOException e) { 

@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.*;
 
 
-class ServiceBRi implements Runnable {
+public class ServiceBRi implements Runnable {
 	
 	private Socket client;
 	

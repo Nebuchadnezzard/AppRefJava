@@ -43,4 +43,13 @@ public class Programmeur {
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
 	}
+	
+	public static boolean estProgrammeur(String login, String mdp) {
+		for(Programmeur p : Programmeur.programmeurs) {
+			if(p.getLogin() == login && p.getMdp() == mdp) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
