@@ -18,15 +18,6 @@ public class Programmeur {
 		
 		programmeurs.add(this);
 	}
-	
-	public boolean ident (String login, String mdp) {
-		for(Programmeur p : programmeurs) {
-			if(p.getLogin() == login && p.getMdp() == mdp) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public String getLogin() {
 		return login;
@@ -46,10 +37,20 @@ public class Programmeur {
 	
 	public static boolean estProgrammeur(String login, String mdp) {
 		for(Programmeur p : Programmeur.programmeurs) {
-			if(p.getLogin() == login && p.getMdp() == mdp) {
+			if(p.getLogin().contains(login) && p.getMdp().contains(mdp)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static String getProgrammeur() {
+		String res = "";
+		for (int i = 0; i<programmeurs.size(); i++){
+			 res+= programmeurs.get(i).getLogin();
+			 res+= programmeurs.get(i).getMdp();
+			 res+= "\n";
+		}
+		return res;
 	}
 }

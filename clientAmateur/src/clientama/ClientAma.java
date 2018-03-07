@@ -28,7 +28,7 @@ public class ClientAma {
 			BufferedReader sin = new BufferedReader (new InputStreamReader(s.getInputStream ( )));
 			PrintWriter sout = new PrintWriter (s.getOutputStream ( ), true);
 			BufferedReader clavier = new BufferedReader(new InputStreamReader(System.in));			
-		
+			
 			System.out.println("Connecté au serveur " + s.getInetAddress() + ":"+ s.getPort());
 			
 			String line;

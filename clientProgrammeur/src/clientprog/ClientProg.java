@@ -32,7 +32,6 @@ public class ClientProg {
 			
 			//demande du mdp
 			System.out.println(sin.readLine());
-			
 			sout.println(clavier.readLine());
 
 			

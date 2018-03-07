@@ -69,10 +69,10 @@ public class ServiceRegistry {
 	
 	// liste les activités présentes
 	public static String toStringue() {
-		String result = "Activités présentes : ##\n";
+		String result = "Activités présentes : ##";
 
 		for(Class<?> classe : servicesClasses){
-			result += classe.getSimpleName()+"\n";
+			result += classe.getSimpleName()+"##";
 		}
 
 		return result;

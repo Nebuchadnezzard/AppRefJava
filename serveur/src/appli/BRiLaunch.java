@@ -1,12 +1,9 @@
 package appli;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Scanner;
 import serveur.ServeurBRi;
 import service.Service;
 import service.ServiceProg;
-import service.ServiceBRi;
+import service.ServiceAma;
 
 
 public class BRiLaunch {
@@ -16,7 +13,7 @@ public class BRiLaunch {
 	public static void main(String[] args) throws Exception {
 		
 		
-		new Thread(new ServeurBRi(PORT_AMA, (Class<? extends Service>) ServiceBRi.class)).start();
+		new Thread(new ServeurBRi(PORT_AMA, (Class<? extends Service>) ServiceAma.class)).start();
 		new Thread(new ServeurBRi(PORT_PROG, (Class<? extends Service>) ServiceProg.class)).start();
 		
 		System.out.println("Serveur lancé");
