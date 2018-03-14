@@ -7,10 +7,18 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Scanner;
+
 
 public class ServiceProg implements Runnable {
 
 	private Socket client;
+	private String pseudo;
+	private String mdp;
+	private Scanner clavier = new Scanner(System.in);
+	private URLClassLoader urlcl;
+	private String fileDir;
+	private URL[] url;
 
 	public ServiceProg(Socket client) {
 		this.client = client;
@@ -18,67 +26,89 @@ public class ServiceProg implements Runnable {
 
 	@Override
 	public void run() {
-
-		// faire l'ident
-		PrintWriter pw = null;
-		BufferedReader br = null;
 		try {
-			pw = new PrintWriter(this.client.getOutputStream(), true);
-			br = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
-			int[] nums = new int[2];
+			PrintWriter pw = new PrintWriter(this.client.getOutputStream(), true);
+			BufferedReader br = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
+
 			pw.println("Entrez votre pseudonyme : ");
-			String pseudo = null;
 			pseudo = br.readLine();
 
 			pw.println("Entrez votre mot de passe : ");
-			String mdp = null;
 			mdp = br.readLine();
 
-			if (!Programmeur.estProgrammeur(pseudo, mdp)) {
-				pw.println("Identification échouée, vous allez être déconnecté");
+			if (!service.Programmeur.estProgrammeur(pseudo, mdp)) {
+				pw.println("Vous n'êtes pas programmeur, vous allez être déconnecté");
 				this.client.close();
 			}
+			Programmeur p = Programmeur.getProgrammeur(pseudo, mdp);
 
-			// proposer un choix (nouveau service, maj, changer adresse srv ftp)
-			pw.println("Bonjour " + pseudo + ", que souhaitez vous faire ?");
-			pw.println("1 : Ajouter un nouveau service");
-			pw.println("2 : Mettre à jour un service");
-			pw.println("3 : changer l'adresse du serveur FTP");
-			
-			int choix;
-			
-			choix = Integer.parseInt(br.readLine());
-			
-			while(choix < 1 || choix > 3) {
-				pw.println("Choix inexistant, entrez un autre choix");
-				choix = Integer.parseInt(br.readLine());
-			}
-			
-			switch(choix) {
-			case 1 :
-				pw.println("Donnez l'adresse du dossier contenant votre nouveau service");
-				String service = "file:///" + br.readLine(); 
-				URL[] urls = new URL[]{new URL(service)};
-				URLClassLoader urlcl = new URLClassLoader(urls);
-				pw.println("Donnez le nom de votre nouveau service");
-				String nomClasse = br.readLine();
-				Class<? extends Service> nouvelleClasse = (Class<? extends Service>) urlcl.loadClass(nomClasse);
-				ServiceRegistry.addService(nouvelleClasse);
-			case 2 :
-				
-			case 3 :
-				
+			while (true) {
+				pw.println("Bienvenue dans votre gestionnaire dynamique d'activité ##1 : Ajouter une activité nouvelle"
+						+ "##2 : Mettre-à-jour un service ##3 : Changer votre d’adresse de serveur ftp ##4 : Supprimer un service"
+						+ "##5 : Quitter le logiciel");
+				int choix = Integer.parseInt(br.readLine());
+				switch (choix) {
+				case 1:
+					fileDir = "file:///" + p.getUrl();
+					url = new URL[] { new URL(fileDir) };
+					urlcl = new URLClassLoader(url); // à faire
+					pw.println("Quel service voulez vous ajouter ?");
+					try {
+						String classeName = br.readLine();
+						Class<? extends Service> classeChargée = (Class<? extends Service>) urlcl.loadClass(classeName);
+						System.out.println(classeChargée.getPackage().getName());
+						if (!classeChargée.getPackage().getName().contains(p.getLogin())) {
+						} else {
+							service.ServiceRegistry.addService(classeChargée);
+						}
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					break;
+				case 2:
+
+					break;
+				case 3:
+					pw.println("Entrez votre nouvelle adresse ftp :");
+					String urlFTP = br.readLine();
+					p.setUrl(urlFTP);
+					break;
+				case 4:
+					if (ServiceRegistry.videService()) {
+						pw.println("Aucuns service n'ont été ajouté.");
+						String temp = br.readLine();
+					} else {
+						fileDir = "file:///" + p.getUrl();
+						url = new URL[] { new URL(fileDir) };
+						urlcl = new URLClassLoader(url); // à faire
+						if (!ServiceRegistry.videService()) {
+							pw.println("Supprimer un de vos services." + ServiceRegistry.toStringue());
+							try {
+								String classeName = br.readLine();
+								String res = p.getLogin() + "." + classeName;
+								Class<? extends Service> classeChargée = (Class<? extends Service>) urlcl.loadClass(res);
+								service.ServiceRegistry.removeService(classeChargée);
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						}
+						break;
+					}
+				case 5:
+					// client.close();
+				}
 			}
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			try {
 				this.client.close();
-			} 
-			catch (IOException e1) {
+			} catch (IOException e1) {
 				System.err.println(e1.getMessage());
 			}
 		}
+
+		// proposer un choix (nouveau service, maj, changer adresse srv ftp)
 
 	}
 

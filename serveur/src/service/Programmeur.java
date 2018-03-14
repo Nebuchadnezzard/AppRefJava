@@ -6,15 +6,17 @@ import java.util.List;
 public class Programmeur {
 	private String login;
 	private String mdp;
+	private String url;
 	
 	static {
 		programmeurs = new ArrayList<Programmeur>();
 	}
 	private static List<Programmeur> programmeurs;
 	
-	public Programmeur(String login, String mdp) {
+	public Programmeur(String login, String mdp, String url) {
 		this.login = login;
 		this.mdp = mdp;
+		this.setUrl(url);
 		
 		programmeurs.add(this);
 	}
@@ -44,7 +46,7 @@ public class Programmeur {
 		return false;
 	}
 	
-	public static String getProgrammeur() {
+	public static String toStringProg() {
 		String res = "";
 		for (int i = 0; i<programmeurs.size(); i++){
 			 res+= programmeurs.get(i).getLogin();
@@ -52,5 +54,22 @@ public class Programmeur {
 			 res+= "\n";
 		}
 		return res;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public static Programmeur getProgrammeur(String pseudo, String mdp) {
+		for(Programmeur p : Programmeur.programmeurs) {
+			if(p.getLogin().contains(pseudo) && p.getMdp().contains(mdp)) {
+				return p;
+			}
+		}
+		return null;
 	}
 }

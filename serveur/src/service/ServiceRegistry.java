@@ -62,6 +62,15 @@ public class ServiceRegistry {
 		servicesClasses.add(service);
 	}
 	
+	public static void removeService(Class<? extends Service> service) {
+		System.out.println("retiré");
+		servicesClasses.remove(service);
+	}
+	
+	public static boolean videService() {
+		return servicesClasses.isEmpty();
+	}
+	
 	// renvoie la classe de service (numService -1)	
 	public static Class<?> getServiceClass(int numService) {
 		return servicesClasses.get(numService-1);

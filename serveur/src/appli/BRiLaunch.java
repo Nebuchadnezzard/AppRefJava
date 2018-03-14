@@ -1,6 +1,7 @@
 package appli;
 
 import serveur.ServeurBRi;
+import service.Programmeur;
 import service.Service;
 import service.ServiceProg;
 import service.ServiceAma;
@@ -15,6 +16,10 @@ public class BRiLaunch {
 		
 		new Thread(new ServeurBRi(PORT_AMA, (Class<? extends Service>) ServiceAma.class)).start();
 		new Thread(new ServeurBRi(PORT_PROG, (Class<? extends Service>) ServiceProg.class)).start();
+		
+		// Création en dur de programmeurs
+		Programmeur p1 = new Programmeur("vitas", "vitas", "Z:/apache-ftpserver-1.1.0/res/home/classes");
+		Programmeur p2 = new Programmeur("couderc", "couderc", "Z:/apache-ftpserver-1.1.0/res/home/classes");
 		
 		System.out.println("Serveur lancé");
 		/*
