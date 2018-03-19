@@ -20,15 +20,15 @@ public class ServiceAma implements Runnable {
 		try {
 			BufferedReader in = new BufferedReader (new InputStreamReader(client.getInputStream ( )));
 			PrintWriter out = new PrintWriter (client.getOutputStream ( ), true);
-			out.println(ServiceRegistry.toStringue()+"##Tapez le nom de service dÈsirÈ :");
+			out.println(ServiceRegistry.toStringue()+"##Tapez le nom de service d√©sir√© :");
 			int choix = Integer.parseInt(in.readLine());
 			
-			String serv = ServiceRegistry.getServiceClass(choix).getName();
 			try {
-				Class classe = Class.forName(serv);
+				Class classe = ServiceRegistry.getServiceClass(choix);
 				Class[] types = new Class[]{Socket.class};
 				Constructor co = classe.getConstructor(types);
 				Object o = co.newInstance(new Socket[]{client});
+				//lancer un nouveau thread plutot que d'invoquer la m√©thode run
 				Method m = classe.getMethod("run", null);
 				m.invoke(o, null);
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
@@ -36,7 +36,7 @@ public class ServiceAma implements Runnable {
 				e1.printStackTrace();
 			}
 			// instancier le service de string "choix" en lui passant la socket "client"
-			// invoquer run() pour cette instance ou la lancer dans un thread ‡ part 
+			// invoquer run() pour cette instance ou la lancer dans un thread √† part 
 				
 			}
 		catch (IOException e) {
