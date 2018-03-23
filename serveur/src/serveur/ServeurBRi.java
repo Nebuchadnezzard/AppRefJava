@@ -5,6 +5,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 
+/**
+ * @author couderc & vitas
+ *
+ */
 public class ServeurBRi implements Runnable {
 	private ServerSocket listen_socket;
 	private Constructor<?> constructeurService;
